@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<!-- 
+██╗  ██╗      ███████╗██████╗ ███████╗██╗
+╚██╗██╔╝      ██╔════╝██╔══██╗╚══███╔╝██║
+ ╚███╔╝ █████╗█████╗  ██████╔╝  ███╔╝ ██║
+ ██╔██╗ ╚════╝██╔══╝  ██╔══██╗ ███╔╝  ██║
+██╔╝ ██╗      ██║     ██║  ██║███████╗██║
+╚═╝  ╚═╝      ╚═╝     ╚═╝  ╚═╝╚══════╝╚═╝
+   
+   © 2024 X_FAZI DEVELOPMENT. WSZELKIE PRAWA ZASTRZEŻONE.
+   
+   UWAGA PRAWNA / LEGAL NOTICE:
+   Ten kod źródłowy, projekt graficzny oraz struktura są własnością intelektualną 
+   twórcy działającego pod pseudonimem X_FAZI.
+   
+   1. Kopiowanie, powielanie i rozpowszechnianie bez pisemnej zgody jest ZABRONIONE.
+   2. Projekt został wykonany na indywidualne zamówienie.
+   3. Odsprzedaż fragmentów lub całości kodu jest nielegalna i łamie ustawę o prawie autorskim.
+   4. Każda próba kradzieży kodu zostanie zgłoszona odpowiednim organom.
+   
+   KONTAKT Z DEWELOPEREM / CONTACT:
+   WWW:   xfazi.pl
+   EMAIL: kontakt@xfazi.pl
+   
+   CREATED BY: X_FAZI
+-->
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMIA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #020203;       
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --accent: #3B82F6;
+            --accent-glow: rgba(59, 130, 246, 0.6);
+            --text-primary: #FFFFFF;
+            --text-secondary: #94A3B8;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glow-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.15) 0%, rgba(2, 2, 3, 0) 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-main);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s;
+            perspective: 2500px; 
+            overflow: hidden;
+        }
+
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #preloader.hidden .cinematic-text {
+            transform: scale(3) translateZ(500px); 
+            opacity: 0;
+            filter: blur(20px);
+            transition: all 0.8s ease;
+        }
+
+        .cinematic-text {
+            font-size: 5.5rem;
+            font-weight: 800;
+            letter-spacing: 15px;
+            display: flex;
+            transform-style: preserve-3d;
+        }
+
+        .cinematic-text span {
+            display: inline-block;
+            opacity: 0;
+            color: white;
+            will-change: transform, opacity;
+            animation: 
+                hyperSpin 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
+                float3D 5s ease-in-out infinite 3s;
+        }
+        .cinematic-text span:nth-child(1) { animation-delay: 0.0s; }
+        .cinematic-text span:nth-child(2) { animation-delay: 0.1s; }
+        .cinematic-text span:nth-child(3) { animation-delay: 0.2s; }
+        .cinematic-text span:nth-child(4) { 
+            animation-delay: 0.3s; 
+            color: var(--accent); 
+            text-shadow: 0 0 80px var(--accent-glow); 
+            position: relative;
+            z-index: 10;
+        }
+        .cinematic-text span:nth-child(5) { animation-delay: 0.4s; }
+        @keyframes hyperSpin {
+            0% {
+                opacity: 0;
+                transform: translate3d(0, 0, -4000px) rotateX(360deg) rotateY(720deg) rotateZ(180deg);
+                filter: blur(50px);
+            }
+            40% {
+                opacity: 1;
+                transform: translate3d(0, 0, -1000px) rotateX(180deg) rotateY(360deg) rotateZ(90deg);
+                filter: blur(10px);
+            }
+            70% {
+                transform: translate3d(0, 0, 400px) rotateX(-20deg) rotateY(-45deg) rotateZ(-10deg);
+                filter: blur(0);
+            }
+            85% {
+                transform: translate3d(0, 0, -50px) rotateX(10deg) rotateY(10deg) rotateZ(0deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translate3d(0, 0, 0) rotateX(0) rotateY(0) rotateZ(0);
+            }
+        }
+        @keyframes float3D {
+            0%, 100% { transform: translate3d(0, 0, 0) rotateY(0deg); }
+            50% { transform: translate3d(0, -20px, 50px) rotateY(15deg); } 
+        }
+        .content-wrapper {
+            opacity: 0;
+            filter: blur(30px);
+            transform: scale(0.9);
+            transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity, filter;
+        }
+
+        .content-wrapper.visible {
+            opacity: 1;
+            filter: blur(0);
+            transform: scale(1);
+        }
+
+        header {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 800;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            letter-spacing: -0.03em;
+            color: white;
+        }
+
+        h1 span {
+            background: linear-gradient(180deg, #fff 20%, #3B82F6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 48px;
+            line-height: 1.7;
+        }
+
+        .btn-cta {
+            position: relative;
+            background-color: var(--accent);
+            color: white;
+            font-weight: 600;
+            padding: 20px 56px;
+            border-radius: var(--radius-full);
+            text-decoration: none;
+            transition: all 0.4s var(--transition-smooth);
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px -10px rgba(59, 130, 246, 0.6);
+            background-color: #4F91F7;
+        }
+
+        #features {
+            padding-bottom: 120px;
+        }
+
+        .section-header {
+            margin-bottom: 80px;
+            text-align: center;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 32px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            transition: all 0.4s var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover::before { opacity: 1; }
+
+        .card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.7);
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+            color: white;
+            transition: 0.4s var(--transition-smooth);
+            position: relative;
+            z-index: 1;
+        }
+
+        .card:hover .card-icon {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke-width: 1.5;
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-top: auto;
+            position: relative;
+            z-index: 1;
+        }
+        footer {
+            padding: 60px 0;
+            text-align: center;
+            border-top: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .footer-logo {
+            font-weight: 800;
+            color: white;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .credits {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .credits a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+        }
+
+        .credits a:hover {
+            color: #60a5fa;
+            border-bottom-color: #60a5fa;
+            text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        @media (max-width: 1024px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            h1 { font-size: 3rem; }
+            .cinematic-text { font-size: 3rem; letter-spacing: 5px; }
+            .content-wrapper { padding-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-bg"></div>
+    <div id="preloader">
+        <div class="cinematic-text">
+            <span>L</span>
+            <span>U</span>
+            <span>M</span>
+            <span>I</span>
+            <span>A</span>
+        </div>
+    </div>
+    <div class="content-wrapper" id="main-content">
+        <div class="container">
+            <header>
+                <h1>Stwórz swojego<br><span>prywatnego bota</span></h1>
+                <p class="hero-desc">
+                    Wynieś swój serwer na wyższy poziom. Profesjonalne narzędzia, unikalny design i niezawodna automatyzacja – wszystko w jednym miejscu.
+                </p>
+                <a href="https://discord.gg/vercode" target="_blank" class="btn-cta">
+                    Rozpocznij współpracę
+                </a>
+            </header>
+            <section id="features">
+                <div class="section-header">
+                    <h2>Możliwości Systemu</h2>
+                    <p>Rozwiązania zaprojektowane z myślą o największych społecznościach</p>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <h3>System Powitań</h3>
+                        <p>Witacz, który robi wrażenie. Grafiki generowane na żywo z awatarem użytkownika i w pełni personalizowany tekst.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        </div>
+                        <h3>Inteligentna Automatyzacja</h3>
+                        <p>Auto-respondery, cykliczne ogłoszenia i triggery. Twój bot dba o aktywność na serwerze 24/7, nawet gdy śpisz.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                        </div>
+                        <h3>Perfekcyjny Design</h3>
+                        <p>Embedy dopasowane co do piksela do brandingu Twojego serwera. Czytelne układy, estetyczne kolory i nowoczesny styl.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        </div>
+                        <h3>Obsługa Zgłoszeń (Tickets)</h3>
+                        <p>Profesjonalny system ticketów. Kategorie, przyciski, automatyczne transkrypcje HTML i panel dla administracji.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                        </div>
+                        <h3>Rozwiązania Dedykowane</h3>
+                        <p>Potrzebujesz niestandardowej funkcji? Napiszemy dowolną logikę – od ekonomii po integracje z API gier.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <h3>Ochrona Serwera</h3>
+                        <p>Zaawansowane moduły anty-raid, weryfikacja użytkowników (Captcha/Button) i filtry antyspamowe.</p>
+                    </div>
+                </div>
+            </section>
+            <footer>
+                <span class="footer-logo">LUMIA</span>
+                <p>&copy; 2024 Lumia Development. Wszelkie prawa zastrzeżone.</p>
+                <p class="credits">
+                    Wykonanie i design: <a href="https://xfazi.pl" target="_blank">X_FAZI</a>
+                </p>
+            </footer>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            const mainContent = document.getElementById('main-content');
+            setTimeout(() => {
+                preloader.classList.add('hidden');
+                setTimeout(() => {
+                    mainContent.classList.add('visible');
+                }, 100); 
+                
+            }, 3500); 
+        });
+    </script>
+</body>
+</html>
